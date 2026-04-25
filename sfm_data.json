@@ -1,0 +1,674 @@
+{
+  "transactions": [
+    {
+      "id": "98d26791",
+      "amount": 55000.0,
+      "category": "Income",
+      "description": "Monthly Salary",
+      "date": "2026-04-25",
+      "type": "income",
+      "tag": ""
+    },
+    {
+      "id": "b1459197",
+      "amount": 55000.0,
+      "category": "Income",
+      "description": "Monthly Salary",
+      "date": "2026-03-25",
+      "type": "income",
+      "tag": ""
+    },
+    {
+      "id": "18e0d784",
+      "amount": 55000.0,
+      "category": "Income",
+      "description": "Monthly Salary",
+      "date": "2026-02-22",
+      "type": "income",
+      "tag": ""
+    },
+    {
+      "id": "2153ac19",
+      "amount": 8000.0,
+      "category": "Income",
+      "description": "Freelance Project",
+      "date": "2026-04-15",
+      "type": "income",
+      "tag": ""
+    },
+    {
+      "id": "0c4866c8",
+      "amount": 3000.0,
+      "category": "Income",
+      "description": "Interest Income",
+      "date": "2026-04-05",
+      "type": "income",
+      "tag": ""
+    },
+    {
+      "id": "487ccaa5",
+      "amount": 12000.0,
+      "category": "Housing",
+      "description": "Rent - October",
+      "date": "2026-04-20",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "d8f2eb23",
+      "amount": 12000.0,
+      "category": "Housing",
+      "description": "Rent - September",
+      "date": "2026-03-20",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "c7510a35",
+      "amount": 12000.0,
+      "category": "Housing",
+      "description": "Rent - August",
+      "date": "2026-02-17",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "ebbfce53",
+      "amount": 2400.0,
+      "category": "Utilities",
+      "description": "Electricity Bill",
+      "date": "2026-04-17",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "b17d9c20",
+      "amount": 800.0,
+      "category": "Utilities",
+      "description": "Water Bill",
+      "date": "2026-04-17",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "251bab8a",
+      "amount": 1200.0,
+      "category": "Utilities",
+      "description": "Internet Plan",
+      "date": "2026-04-16",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "21ec03fc",
+      "amount": 450.0,
+      "category": "Food & Dining",
+      "description": "Zomato Order",
+      "date": "2026-04-24",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "2910f1a3",
+      "amount": 320.0,
+      "category": "Food & Dining",
+      "description": "Grocery Store",
+      "date": "2026-04-22",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "22e31233",
+      "amount": 180.0,
+      "category": "Food & Dining",
+      "description": "Coffee Shop",
+      "date": "2026-04-20",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "882fb184",
+      "amount": 600.0,
+      "category": "Food & Dining",
+      "description": "Restaurant Dinner",
+      "date": "2026-04-18",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "fb29fded",
+      "amount": 290.0,
+      "category": "Food & Dining",
+      "description": "Grocery Store",
+      "date": "2026-04-16",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "c86b39ae",
+      "amount": 150.0,
+      "category": "Food & Dining",
+      "description": "Lunch",
+      "date": "2026-04-14",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "46477ec0",
+      "amount": 480.0,
+      "category": "Food & Dining",
+      "description": "Weekend Brunch",
+      "date": "2026-04-11",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "991f4e85",
+      "amount": 210.0,
+      "category": "Food & Dining",
+      "description": "Grocery Store",
+      "date": "2026-04-09",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "0ebdf31c",
+      "amount": 130.0,
+      "category": "Food & Dining",
+      "description": "Snacks",
+      "date": "2026-04-07",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "9b2bc262",
+      "amount": 550.0,
+      "category": "Food & Dining",
+      "description": "Family Dinner",
+      "date": "2026-04-04",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "237b2b69",
+      "amount": 380.0,
+      "category": "Food & Dining",
+      "description": "Grocery Store",
+      "date": "2026-04-02",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "ecf34c3f",
+      "amount": 200.0,
+      "category": "Food & Dining",
+      "description": "Cafe",
+      "date": "2026-03-31",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "b7f4d0e8",
+      "amount": 420.0,
+      "category": "Food & Dining",
+      "description": "Zomato Order",
+      "date": "2026-03-28",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "cc148337",
+      "amount": 300.0,
+      "category": "Food & Dining",
+      "description": "Grocery Store",
+      "date": "2026-03-25",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "e4ef5b41",
+      "amount": 250.0,
+      "category": "Food & Dining",
+      "description": "Lunch",
+      "date": "2026-03-21",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "3615d3c9",
+      "amount": 680.0,
+      "category": "Food & Dining",
+      "description": "Restaurant",
+      "date": "2026-03-16",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "f537a8fe",
+      "amount": 340.0,
+      "category": "Food & Dining",
+      "description": "Grocery Store",
+      "date": "2026-03-11",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "437a9ec7",
+      "amount": 190.0,
+      "category": "Food & Dining",
+      "description": "Coffee Shop",
+      "date": "2026-03-06",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "1f2e4f59",
+      "amount": 420.0,
+      "category": "Food & Dining",
+      "description": "Zomato Order",
+      "date": "2026-03-01",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "2a93763c",
+      "amount": 310.0,
+      "category": "Food & Dining",
+      "description": "Grocery Store",
+      "date": "2026-02-24",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "daeccbdc",
+      "amount": 170.0,
+      "category": "Food & Dining",
+      "description": "Snacks",
+      "date": "2026-02-19",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "f0ac6c7e",
+      "amount": 1200.0,
+      "category": "Transportation",
+      "description": "Petrol",
+      "date": "2026-04-23",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "be0f7426",
+      "amount": 150.0,
+      "category": "Transportation",
+      "description": "Ola Ride",
+      "date": "2026-04-19",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "94fcf68a",
+      "amount": 80.0,
+      "category": "Transportation",
+      "description": "Auto Ride",
+      "date": "2026-04-15",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "410d15c1",
+      "amount": 1300.0,
+      "category": "Transportation",
+      "description": "Petrol",
+      "date": "2026-04-12",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "a50aefe9",
+      "amount": 200.0,
+      "category": "Transportation",
+      "description": "Rapido",
+      "date": "2026-04-06",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "7f17f6fa",
+      "amount": 95.0,
+      "category": "Transportation",
+      "description": "Bus Pass",
+      "date": "2026-04-01",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "b4e38c1f",
+      "amount": 1150.0,
+      "category": "Transportation",
+      "description": "Petrol",
+      "date": "2026-03-23",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "88b21d28",
+      "amount": 180.0,
+      "category": "Transportation",
+      "description": "Ola Ride",
+      "date": "2026-03-18",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "a53ce350",
+      "amount": 1200.0,
+      "category": "Transportation",
+      "description": "Petrol",
+      "date": "2026-03-14",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "7698b4f4",
+      "amount": 160.0,
+      "category": "Transportation",
+      "description": "Auto Ride",
+      "date": "2026-03-08",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "68f197d4",
+      "amount": 1100.0,
+      "category": "Transportation",
+      "description": "Petrol",
+      "date": "2026-03-03",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "255b2a4f",
+      "amount": 200.0,
+      "category": "Transportation",
+      "description": "Ola Ride",
+      "date": "2026-02-26",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "18a893ef",
+      "amount": 649.0,
+      "category": "Entertainment",
+      "description": "Netflix Subscription",
+      "date": "2026-04-24",
+      "type": "expense",
+      "tag": "subscription"
+    },
+    {
+      "id": "819f4419",
+      "amount": 199.0,
+      "category": "Entertainment",
+      "description": "Spotify Premium",
+      "date": "2026-04-24",
+      "type": "expense",
+      "tag": "subscription"
+    },
+    {
+      "id": "0cf1baff",
+      "amount": 1299.0,
+      "category": "Entertainment",
+      "description": "Amazon Prime",
+      "date": "2026-04-23",
+      "type": "expense",
+      "tag": "subscription"
+    },
+    {
+      "id": "8ec01c62",
+      "amount": 500.0,
+      "category": "Entertainment",
+      "description": "Movie Theatre",
+      "date": "2026-04-10",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "772f699b",
+      "amount": 300.0,
+      "category": "Entertainment",
+      "description": "Gaming Top-up",
+      "date": "2026-04-03",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "4dcfe831",
+      "amount": 649.0,
+      "category": "Entertainment",
+      "description": "Netflix Subscription",
+      "date": "2026-03-24",
+      "type": "expense",
+      "tag": "subscription"
+    },
+    {
+      "id": "d7f175cd",
+      "amount": 199.0,
+      "category": "Entertainment",
+      "description": "Spotify Premium",
+      "date": "2026-03-24",
+      "type": "expense",
+      "tag": "subscription"
+    },
+    {
+      "id": "ace0d0b8",
+      "amount": 649.0,
+      "category": "Entertainment",
+      "description": "Netflix Subscription",
+      "date": "2026-02-21",
+      "type": "expense",
+      "tag": "subscription"
+    },
+    {
+      "id": "02d800d4",
+      "amount": 199.0,
+      "category": "Entertainment",
+      "description": "Spotify Premium",
+      "date": "2026-02-21",
+      "type": "expense",
+      "tag": "subscription"
+    },
+    {
+      "id": "c583949b",
+      "amount": 2500.0,
+      "category": "Shopping",
+      "description": "Myntra Clothes",
+      "date": "2026-04-21",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "28ca16fa",
+      "amount": 800.0,
+      "category": "Shopping",
+      "description": "Pharmacy",
+      "date": "2026-04-13",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "2b4e8262",
+      "amount": 3200.0,
+      "category": "Shopping",
+      "description": "New Shoes",
+      "date": "2026-04-05",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "90b2271c",
+      "amount": 600.0,
+      "category": "Shopping",
+      "description": "Books",
+      "date": "2026-03-29",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "599069d8",
+      "amount": 4500.0,
+      "category": "Shopping",
+      "description": "Electronics - Earphones",
+      "date": "2026-03-22",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "b7889fb5",
+      "amount": 1200.0,
+      "category": "Shopping",
+      "description": "Household Items",
+      "date": "2026-03-15",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "3d76403f",
+      "amount": 700.0,
+      "category": "Shopping",
+      "description": "Stationery",
+      "date": "2026-03-08",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "39b8a076",
+      "amount": 2800.0,
+      "category": "Shopping",
+      "description": "Clothing",
+      "date": "2026-03-01",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "a226cc15",
+      "amount": 950.0,
+      "category": "Shopping",
+      "description": "Personal Care",
+      "date": "2026-02-22",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "9e0041b3",
+      "amount": 1500.0,
+      "category": "Healthcare",
+      "description": "Doctor Visit",
+      "date": "2026-04-09",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "99b7ef61",
+      "amount": 850.0,
+      "category": "Healthcare",
+      "description": "Pharmacy",
+      "date": "2026-04-09",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "88574714",
+      "amount": 2000.0,
+      "category": "Healthcare",
+      "description": "Lab Tests",
+      "date": "2026-03-12",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "53252ec4",
+      "amount": 25000.0,
+      "category": "Shopping",
+      "description": "Laptop Repair \u2014 Emergency",
+      "date": "2026-04-22",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "544115f7",
+      "amount": 3500.0,
+      "category": "Education",
+      "description": "Online Course - Udemy",
+      "date": "2026-04-15",
+      "type": "expense",
+      "tag": ""
+    },
+    {
+      "id": "327a2334",
+      "amount": 2000.0,
+      "category": "Education",
+      "description": "Books & Stationery",
+      "date": "2026-03-31",
+      "type": "expense",
+      "tag": ""
+    }
+  ],
+  "budgets": {
+    "Food & Dining": {
+      "category": "Food & Dining",
+      "monthly_limit": 6000.0
+    },
+    "Transportation": {
+      "category": "Transportation",
+      "monthly_limit": 3000.0
+    },
+    "Housing": {
+      "category": "Housing",
+      "monthly_limit": 14000.0
+    },
+    "Healthcare": {
+      "category": "Healthcare",
+      "monthly_limit": 2000.0
+    },
+    "Entertainment": {
+      "category": "Entertainment",
+      "monthly_limit": 2000.0
+    },
+    "Shopping": {
+      "category": "Shopping",
+      "monthly_limit": 5000.0
+    },
+    "Utilities": {
+      "category": "Utilities",
+      "monthly_limit": 4500.0
+    },
+    "Education": {
+      "category": "Education",
+      "monthly_limit": 3000.0
+    },
+    "Subscriptions": {
+      "category": "Subscriptions",
+      "monthly_limit": 2000.0
+    }
+  },
+  "goals": [
+    {
+      "name": "Emergency Fund",
+      "target_amount": 100000.0,
+      "current_amount": 23000.0,
+      "deadline": "2025-12-31"
+    },
+    {
+      "name": "Vacation to Goa",
+      "target_amount": 30000.0,
+      "current_amount": 12000.0,
+      "deadline": "2025-06-01"
+    },
+    {
+      "name": "New Laptop",
+      "target_amount": 60000.0,
+      "current_amount": 5000.0,
+      "deadline": "2025-09-01"
+    }
+  ]
+}

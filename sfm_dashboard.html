@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SFM-PEIS — Smart Finance Manager</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #080C12;
+    --surface:  #0F1520;
+    --card:     #141C2B;
+    --border:   rgba(255,255,255,0.07);
+    --accent:   #00E5C3;
+    --red:      #FF5C5C;
+    --yellow:   #FFD166;
+    --purple:   #9B7FFF;
+    --blue:     #4A9EFF;
+    --text:     #EAF0FF;
+    --muted:    #6B7A99;
+    --font:     'Space Grotesk', sans-serif;
+    --mono:     'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
+
+  /* ── Sidebar ─────────────────────────────── */
+  .layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+    position: sticky; top: 0; height: 100vh;
+    display: flex; flex-direction: column;
+  }
+  .logo {
+    padding: 0 24px 32px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .logo-icon {
+    width: 38px; height: 38px; background: var(--accent);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo-text { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
+  .logo-sub  { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  .nav { flex: 1; }
+  .nav-section { padding: 8px 16px 4px; font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 24px; cursor: pointer; font-size: 14px; font-weight: 500;
+    border-left: 3px solid transparent;
+    color: var(--muted); transition: all 0.15s;
+  }
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,229,195,0.05); }
+  .nav-item .icon { width: 18px; text-align: center; font-size: 16px; }
+
+  .sidebar-footer {
+    padding: 16px 24px; border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--muted);
+  }
+
+  /* ── Main Content ─────────────────────────── */
+  .main { padding: 40px; overflow-y: auto; }
+  .page { display: none; animation: fadeIn 0.2s; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+  .page-header { margin-bottom: 32px; }
+  .page-title { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+  .page-sub { color: var(--muted); font-size: 14px; margin-top: 4px; }
+
+  /* ── Metric Cards ─────────────────────────── */
+  .metrics { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
+  .metric {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 24px;
+    position: relative; overflow: hidden;
+  }
+  .metric::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--accent-color, var(--accent));
+  }
+  .metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .metric-value { font-size: 26px; font-weight: 700; margin-top: 6px; font-family: var(--mono); }
+  .metric-delta { font-size: 12px; margin-top: 4px; color: var(--muted); }
+  .metric-delta.up { color: var(--accent); }
+  .metric-delta.dn { color: var(--red); }
+
+  /* ── Charts ───────────────────────────────── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .chart-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px;
+  }
+  .chart-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .chart-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+  .chart-wrap { position: relative; }
+
+  /* ── Table ────────────────────────────────── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { padding: 10px 14px; text-align: left; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid var(--border); }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600;
+  }
+  .badge-ok     { background: rgba(0,229,195,0.12); color: var(--accent); }
+  .badge-warn   { background: rgba(255,209,102,0.12); color: var(--yellow); }
+  .badge-over   { background: rgba(255,92,92,0.12); color: var(--red); }
+  .badge-income { background: rgba(74,158,255,0.12); color: var(--blue); }
+  .badge-exp    { background: rgba(255,92,92,0.1); color: var(--red); }
+
+  /* ── Budget bars ──────────────────────────── */
+  .budget-list { display: flex; flex-direction: column; gap: 14px; }
+  .budget-item {}
+  .budget-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .budget-cat { font-size: 13px; font-weight: 500; }
+  .budget-amounts { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+  .progress-bg { background: rgba(255,255,255,0.06); border-radius: 99px; height: 6px; }
+  .progress-fill { height: 6px; border-radius: 99px; transition: width 1s cubic-bezier(.22,1,.36,1); }
+
+  /* ── Goals ────────────────────────────────── */
+  .goals-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  .goal-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px; position: relative;
+  }
+  .goal-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .goal-deadline { font-size: 11px; color: var(--muted); margin-bottom: 20px; }
+  .goal-ring { display: flex; justify-content: center; margin-bottom: 16px; }
+  .ring-svg { transform: rotate(-90deg); }
+  .ring-pct { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -20%); font-size: 20px; font-weight: 700; font-family: var(--mono); }
+  .goal-amounts { display: flex; justify-content: space-between; font-size: 12px; }
+  .goal-saved { color: var(--accent); font-family: var(--mono); font-weight: 600; }
+  .goal-target { color: var(--muted); font-family: var(--mono); }
+
+  /* ── Anomalies ────────────────────────────── */
+  .anomaly-card {
+    background: rgba(255,92,92,0.05); border: 1px solid rgba(255,92,92,0.2);
+    border-radius: 12px; padding: 16px 20px; margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .anomaly-desc { font-size: 14px; font-weight: 500; }
+  .anomaly-meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .anomaly-amount { font-size: 18px; font-weight: 700; color: var(--red); font-family: var(--mono); }
+  .anomaly-z { font-size: 11px; color: var(--muted); text-align: right; margin-top: 2px; }
+
+  /* ── Predictions ──────────────────────────── */
+  .pred-total {
+    background: linear-gradient(135deg, rgba(0,229,195,0.1), rgba(155,127,255,0.1));
+    border: 1px solid rgba(0,229,195,0.2); border-radius: 16px; padding: 28px;
+    text-align: center; margin-bottom: 24px;
+  }
+  .pred-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .pred-value { font-size: 42px; font-weight: 700; font-family: var(--mono); color: var(--accent); margin: 8px 0; }
+  .pred-method { font-size: 12px; color: var(--muted); }
+
+  /* ── Subscriptions ────────────────────────── */
+  .sub-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px; margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sub-name { font-size: 14px; font-weight: 500; }
+  .sub-cat { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .sub-amount { font-size: 16px; font-weight: 600; color: var(--yellow); font-family: var(--mono); }
+
+  /* ── Add Transaction Form ─────────────────── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 640px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  input, select {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 14px; color: var(--text); font-family: var(--font); font-size: 14px;
+    outline: none; transition: border-color 0.15s;
+  }
+  input:focus, select:focus { border-color: var(--accent); }
+  select option { background: var(--card); }
+  .btn {
+    padding: 12px 28px; border-radius: 10px; cursor: pointer; font-family: var(--font);
+    font-size: 14px; font-weight: 600; border: none; transition: all 0.15s;
+  }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+  .success-msg { color: var(--accent); font-size: 13px; margin-top: 12px; display: none; }
+
+  /* ── Scrollbar ────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+  .trend-up { color: var(--accent); } .trend-dn { color: var(--red); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">💰</div>
+    <div>
+      <div class="logo-text">SFM-PEIS</div>
+      <div class="logo-sub">Finance Manager</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">Overview</div>
+    <div class="nav-item active" onclick="showPage('dashboard')">
+      <span class="icon">📊</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('transactions')">
+      <span class="icon">📋</span> Transactions
+    </div>
+    <div class="nav-section">Analysis</div>
+    <div class="nav-item" onclick="showPage('budgets')">
+      <span class="icon">💼</span> Budgets
+    </div>
+    <div class="nav-item" onclick="showPage('goals')">
+      <span class="icon">🎯</span> Savings Goals
+    </div>
+    <div class="nav-item" onclick="showPage('predictions')">
+      <span class="icon">🔮</span> Predictions
+    </div>
+    <div class="nav-section">Alerts</div>
+    <div class="nav-item" onclick="showPage('anomalies')">
+      <span class="icon">⚠️</span> Anomalies
+    </div>
+    <div class="nav-item" onclick="showPage('subscriptions')">
+      <span class="icon">🔄</span> Subscriptions
+    </div>
+    <div class="nav-section">Actions</div>
+    <div class="nav-item" onclick="showPage('add')">
+      <span class="icon">➕</span> Add Transaction
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    Smart Finance Manager v1.0<br>
+    April 2026 · Demo Data
+  </div>
+</aside>
+
+<!-- ── Main ── -->
+<main class="main">
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-header">
+      <div class="page-title">Dashboard</div>
+      <div class="page-sub">April 2026 · Financial Overview</div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric" style="--accent-color: #4A9EFF">
+        <div class="metric-label">Total Income</div>
+        <div class="metric-value">₹66,000</div>
+        <div class="metric-delta up">▲ This month</div>
+      </div>
+      <div class="metric" style="--accent-color: #FF5C5C">
+        <div class="metric-label">Total Expenses</div>
+        <div class="metric-value">₹63,462</div>
+        <div class="metric-delta dn">▲ High due to repair</div>
+      </div>
+      <div class="metric" style="--accent-color: #00E5C3">
+        <div class="metric-label">Net Savings</div>
+        <div class="metric-value">₹2,538</div>
+        <div class="metric-delta up">▲ 3.8% saved</div>
+      </div>
+      <div class="metric" style="--accent-color: #9B7FFF">
+        <div class="metric-label">Transactions</div>
+        <div class="metric-value">36</div>
+        <div class="metric-delta">This month</div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="chart-card">
+        <div class="chart-title">Monthly Income vs Expenses</div>
+        <div class="chart-sub">3-month trend comparison</div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas id="monthlyChart" role="img" aria-label="Bar chart comparing monthly income and expenses over 3 months">Monthly income and expenses for Feb, Mar, Apr 2026</canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Expense Breakdown</div>
+        <div class="chart-sub">By category, all time</div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas id="pieChart" role="img" aria-label="Pie chart of expense categories">Expenses by category including Shopping, Housing, Food, Transport</canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-title">Daily Expense Trend</div>
+        <div class="chart-sub">With 7-day rolling average</div>
+        <div class="chart-wrap" style="height:220px">
+          <canvas id="dailyChart" role="img" aria-label="Line chart of daily expenses">Daily expense amounts over time</canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Recent Transactions</div>
+        <div class="chart-sub">Last 8 entries</div>
+        <div class="table-wrap" id="recentTable"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSACTIONS -->
+  <div class="page" id="page-transactions">
+    <div class="page-header">
+      <div class="page-title">All Transactions</div>
+      <div class="page-sub">Complete transaction history</div>
+    </div>
+    <div class="chart-card">
+      <div class="table-wrap" id="allTxTable"></div>
+    </div>
+  </div>
+
+  <!-- BUDGETS -->
+  <div class="page" id="page-budgets">
+    <div class="page-header">
+      <div class="page-title">Budget Status</div>
+      <div class="page-sub">April 2026 · Monthly limits vs actual spending</div>
+    </div>
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-title">Budget Utilisation</div>
+        <div class="chart-sub">% of monthly budget used</div>
+        <div class="budget-list" id="budgetBars"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Budget Overview</div>
+        <div class="chart-sub">Spent vs limit by category</div>
+        <div class="chart-wrap" style="height:340px">
+          <canvas id="budgetChart" role="img" aria-label="Horizontal bar chart of budget usage per category">Budget vs spent for each category</canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOALS -->
+  <div class="page" id="page-goals">
+    <div class="page-header">
+      <div class="page-title">Savings Goals</div>
+      <div class="page-sub">Track your financial targets</div>
+    </div>
+    <div class="goals-grid" id="goalsGrid"></div>
+  </div>
+
+  <!-- PREDICTIONS -->
+  <div class="page" id="page-predictions">
+    <div class="page-header">
+      <div class="page-title">Expense Predictions</div>
+      <div class="page-sub">Linear regression on 3-month history</div>
+    </div>
+    <div class="pred-total">
+      <div class="pred-label">Predicted next month total</div>
+      <div class="pred-value">₹86,043</div>
+      <div class="pred-method">Method: Linear Regression · Based on 3 months of data</div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Predicted vs Actual by Category</div>
+      <div class="chart-sub">Next month forecast per category</div>
+      <div class="chart-wrap" style="height:320px">
+        <canvas id="predChart" role="img" aria-label="Bar chart of predicted expenses by category">Predicted expense amounts for each category next month</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANOMALIES -->
+  <div class="page" id="page-anomalies">
+    <div class="page-header">
+      <div class="page-title">Anomaly Detection</div>
+      <div class="page-sub">Unusual transactions flagged by Z-score analysis</div>
+    </div>
+    <div id="anomaliesList"></div>
+  </div>
+
+  <!-- SUBSCRIPTIONS -->
+  <div class="page" id="page-subscriptions">
+    <div class="page-header">
+      <div class="page-title">Subscriptions</div>
+      <div class="page-sub">Recurring charges detected automatically</div>
+    </div>
+    <div id="subsList"></div>
+  </div>
+
+  <!-- ADD TRANSACTION -->
+  <div class="page" id="page-add">
+    <div class="page-header">
+      <div class="page-title">Add Transaction</div>
+      <div class="page-sub">Record a new income or expense entry</div>
+    </div>
+    <div class="chart-card" style="max-width: 660px">
+      <div class="form-grid" id="txForm">
+        <div class="form-group">
+          <label>Amount (₹)</label>
+          <input type="number" id="f-amount" placeholder="0.00" min="0" step="0.01">
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="f-type">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Description</label>
+          <input type="text" id="f-desc" placeholder="e.g. Grocery Store, Salary...">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="f-cat">
+            <option>Food & Dining</option><option>Transportation</option>
+            <option>Housing</option><option>Healthcare</option>
+            <option>Entertainment</option><option>Shopping</option>
+            <option>Utilities</option><option>Education</option>
+            <option>Travel</option><option>Savings</option>
+            <option>Income</option><option>Subscriptions</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="f-date">
+        </div>
+        <div class="form-group full">
+          <button class="btn btn-primary" onclick="addTransaction()">Add Transaction</button>
+          <div class="success-msg" id="successMsg">✓ Transaction added successfully!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+// ── Data ────────────────────────────────────────────────────────────────────
+const DATA = {
+  summary: {"year":2026,"month":4,"income":66000,"expenses":63462,"net":2538,"by_category":{"Shopping":31500,"Housing":12000,"Utilities":4400,"Food & Dining":3740,"Education":3500,"Transportation":3025,"Entertainment":2947,"Healthcare":2350},"transactions_count":36},
+
+  budgets: [
+    {"Category":"Food & Dining","Budget":6000,"Spent":3740,"Remaining":2260,"% Used":62.3,"Status":"OK"},
+    {"Category":"Transportation","Budget":3000,"Spent":3025,"Remaining":-25,"% Used":100.8,"Status":"OVER"},
+    {"Category":"Housing","Budget":14000,"Spent":12000,"Remaining":2000,"% Used":85.7,"Status":"WARN"},
+    {"Category":"Healthcare","Budget":2000,"Spent":2350,"Remaining":-350,"% Used":117.5,"Status":"OVER"},
+    {"Category":"Entertainment","Budget":2000,"Spent":2947,"Remaining":-947,"% Used":147.3,"Status":"OVER"},
+    {"Category":"Shopping","Budget":5000,"Spent":31500,"Remaining":-26500,"% Used":630,"Status":"OVER"},
+    {"Category":"Utilities","Budget":4500,"Spent":4400,"Remaining":100,"% Used":97.8,"Status":"WARN"},
+    {"Category":"Education","Budget":3000,"Spent":3500,"Remaining":-500,"% Used":116.7,"Status":"OVER"},
+    {"Category":"Subscriptions","Budget":2000,"Spent":0,"Remaining":2000,"% Used":0,"Status":"OK"},
+  ],
+
+  cats: {"Shopping":42250,"Housing":36000,"Food & Dining":7020,"Transportation":7015,"Education":5500,"Entertainment":4643,"Utilities":4400,"Healthcare":4350},
+  expMonthly: {"2026-02":14478,"2026-03":33238,"2026-04":63462},
+  incMonthly: {"2026-02":55000,"2026-03":55000,"2026-04":66000},
+
+  goals: [
+    {"name":"Emergency Fund","target":100000,"current":23000,"pct":23,"deadline":"2025-12-31"},
+    {"name":"Vacation to Goa","target":30000,"current":12000,"pct":40,"deadline":"2025-06-01"},
+    {"name":"New Laptop","target":60000,"current":5000,"pct":8.3,"deadline":"2025-09-01"},
+  ],
+
+  pred: {"predicted_total":86043,"predicted_by_category":{"Entertainment":3647,"Food & Dining":5600,"Housing":12000,"Shopping":44633,"Transportation":5163,"Education":5000,"Healthcare":2700,"Utilities":4400},"method":"linear_regression"},
+
+  recent: [
+    {"date":"2026-04-25","description":"Monthly Salary","category":"Income","amount":55000,"type":"income"},
+    {"date":"2026-04-24","description":"Zomato Order","category":"Food & Dining","amount":450,"type":"expense"},
+    {"date":"2026-04-24","description":"Netflix Subscription","category":"Entertainment","amount":649,"type":"expense"},
+    {"date":"2026-04-24","description":"Spotify Premium","category":"Entertainment","amount":199,"type":"expense"},
+    {"date":"2026-04-23","description":"Amazon Prime","category":"Entertainment","amount":1299,"type":"expense"},
+    {"date":"2026-04-23","description":"Petrol","category":"Transportation","amount":1200,"type":"expense"},
+    {"date":"2026-04-22","description":"Laptop Repair — Emergency","category":"Shopping","amount":25000,"type":"expense"},
+    {"date":"2026-04-22","description":"Grocery Store","category":"Food & Dining","amount":320,"type":"expense"},
+  ],
+
+  anomalies: [
+    {"date":"2026-04-22","description":"Laptop Repair — Emergency","category":"Shopping","amount":25000,"z_score":3.81},
+    {"date":"2026-03-26","description":"Laptop Repair — Emergency","category":"Shopping","amount":25000,"z_score":3.81},
+    {"date":"2026-02-21","description":"Monthly Salary","category":"Income","amount":55000,"z_score":4.12},
+  ],
+
+  subscriptions: [
+    {"description":"Netflix Subscription","category":"Entertainment","amount":649},
+    {"description":"Spotify Premium","category":"Entertainment","amount":199},
+    {"description":"Amazon Prime","category":"Entertainment","amount":1299},
+  ],
+
+  allTx: [
+    {"date":"2026-04-25","description":"Monthly Salary","category":"Income","amount":55000,"type":"income"},
+    {"date":"2026-04-24","description":"Zomato Order","category":"Food & Dining","amount":450,"type":"expense"},
+    {"date":"2026-04-24","description":"Netflix Subscription","category":"Entertainment","amount":649,"type":"expense"},
+    {"date":"2026-04-24","description":"Spotify Premium","category":"Entertainment","amount":199,"type":"expense"},
+    {"date":"2026-04-23","description":"Amazon Prime","category":"Entertainment","amount":1299,"type":"expense"},
+    {"date":"2026-04-23","description":"Petrol","category":"Transportation","amount":1200,"type":"expense"},
+    {"date":"2026-04-22","description":"Laptop Repair — Emergency","category":"Shopping","amount":25000,"type":"expense"},
+    {"date":"2026-04-22","description":"Grocery Store","category":"Food & Dining","amount":320,"type":"expense"},
+    {"date":"2026-04-21","description":"Myntra Clothes","category":"Shopping","amount":2500,"type":"expense"},
+    {"date":"2026-04-20","description":"Rent - October","category":"Housing","amount":12000,"type":"expense"},
+    {"date":"2026-04-19","description":"Online Course - Udemy","category":"Education","amount":3500,"type":"expense"},
+    {"date":"2026-04-18","description":"Doctor Visit","category":"Healthcare","amount":1500,"type":"expense"},
+    {"date":"2026-04-18","description":"Pharmacy","category":"Healthcare","amount":850,"type":"expense"},
+    {"date":"2026-04-17","description":"Electricity Bill","category":"Utilities","amount":2400,"type":"expense"},
+    {"date":"2026-04-17","description":"Water Bill","category":"Utilities","amount":800,"type":"expense"},
+    {"date":"2026-04-17","description":"Internet Plan","category":"Utilities","amount":1200,"type":"expense"},
+    {"date":"2026-04-15","description":"Freelance Project","category":"Income","amount":8000,"type":"income"},
+    {"date":"2026-04-14","description":"Restaurant Dinner","category":"Food & Dining","amount":600,"type":"expense"},
+    {"date":"2026-04-12","description":"New Shoes","category":"Shopping","amount":3200,"type":"expense"},
+    {"date":"2026-04-10","description":"Interest Income","category":"Income","amount":3000,"type":"income"},
+  ],
+};
+
+const PALETTE = ['#00E5C3','#FF5C5C','#FFD166','#9B7FFF','#4A9EFF','#34D399','#FB923C','#F472B6'];
+
+function fmt(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
+
+// ── Navigation ───────────────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (id === 'budgets') renderBudgetBars();
+  if (id === 'goals') renderGoals();
+  if (id === 'anomalies') renderAnomalies();
+  if (id === 'subscriptions') renderSubs();
+  if (id === 'transactions') renderAllTx();
+}
+
+// ── Charts ───────────────────────────────────────────────────────────────────
+function initCharts() {
+  // Monthly bar
+  const months = Object.keys(DATA.expMonthly);
+  new Chart(document.getElementById('monthlyChart'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        { label: 'Income', data: months.map(m => DATA.incMonthly[m]||0), backgroundColor: '#4A9EFF99', borderColor: '#4A9EFF', borderWidth: 2 },
+        { label: 'Expenses', data: months.map(m => DATA.expMonthly[m]||0), backgroundColor: '#FF5C5C99', borderColor: '#FF5C5C', borderWidth: 2 },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#6B7A99', font: { family: 'Space Grotesk' } } } },
+      scales: {
+        x: { ticks: { color: '#6B7A99' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        y: { ticks: { color: '#6B7A99', callback: v => '₹'+(v/1000)+'K' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+      }
+    }
+  });
+
+  // Pie
+  const cats = Object.keys(DATA.cats); const vals = Object.values(DATA.cats);
+  new Chart(document.getElementById('pieChart'), {
+    type: 'doughnut',
+    data: { labels: cats, datasets: [{ data: vals, backgroundColor: PALETTE, borderColor: '#141C2B', borderWidth: 3 }] },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '55%',
+      plugins: { legend: { position: 'bottom', labels: { color: '#6B7A99', font: { family: 'Space Grotesk', size: 11 }, padding: 10 } } }
+    }
+  });
+
+  // Daily line (simulate daily data)
+  const dailyDates = [], dailyAmts = [];
+  const base = new Date('2026-04-01');
+  const dailyRaw = {1:450,2:320,3:649+199,4:1200,5:25000+2500,6:12000,7:3500,8:1500+850,9:2400+800+1200,10:600,11:3200,12:0,13:5000,14:450,15:2000,16:800,17:1200,18:400,19:1000,20:300,21:150,22:600,23:500,24:900,25:1200};
+  for (let i=1; i<=25; i++) {
+    const d = new Date(base); d.setDate(i);
+    dailyDates.push(d.toLocaleDateString('en-IN',{month:'short',day:'numeric'}));
+    dailyAmts.push(dailyRaw[i]||Math.floor(Math.random()*1500+200));
+  }
+  const roll7 = dailyAmts.map((v,i) => i<6?null : dailyAmts.slice(i-6,i+1).reduce((a,b)=>a+b,0)/7);
+  new Chart(document.getElementById('dailyChart'), {
+    type: 'line',
+    data: {
+      labels: dailyDates,
+      datasets: [
+        { label: 'Daily', data: dailyAmts, borderColor: '#00E5C3', backgroundColor: 'rgba(0,229,195,0.08)', fill: true, tension: 0.4, pointRadius: 2 },
+        { label: '7-day avg', data: roll7, borderColor: '#FFD166', borderDash: [5,3], fill: false, tension: 0.4, pointRadius: 0, borderWidth: 1.5 },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#6B7A99', font: { family: 'Space Grotesk', size: 11 } } } },
+      scales: {
+        x: { ticks: { color: '#6B7A99', maxRotation: 45 }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { ticks: { color: '#6B7A99', callback: v => '₹'+v.toLocaleString('en-IN') }, grid: { color: 'rgba(255,255,255,0.04)' } }
+      }
+    }
+  });
+
+  // Budget chart
+  const bCats = DATA.budgets.map(b=>b.Category);
+  const bBudget = DATA.budgets.map(b=>b.Budget);
+  const bSpent = DATA.budgets.map(b=>b.Spent);
+  new Chart(document.getElementById('budgetChart'), {
+    type: 'bar',
+    data: {
+      labels: bCats,
+      datasets: [
+        { label: 'Budget', data: bBudget, backgroundColor: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.15)', borderWidth: 1 },
+        { label: 'Spent', data: bSpent, backgroundColor: bSpent.map((s,i)=> s > bBudget[i] ? '#FF5C5C99' : '#00E5C399'), borderColor: bSpent.map((s,i)=> s > bBudget[i] ? '#FF5C5C' : '#00E5C3'), borderWidth: 2 },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#6B7A99', font: { family: 'Space Grotesk', size: 11 } } } },
+      scales: {
+        x: { ticks: { color: '#6B7A99', maxRotation: 35, font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { ticks: { color: '#6B7A99', callback: v => '₹'+(v/1000).toFixed(0)+'K' }, grid: { color: 'rgba(255,255,255,0.04)' } }
+      }
+    }
+  });
+
+  // Prediction chart
+  const pCats = Object.keys(DATA.pred.predicted_by_category);
+  const pVals = Object.values(DATA.pred.predicted_by_category);
+  new Chart(document.getElementById('predChart'), {
+    type: 'bar',
+    data: {
+      labels: pCats,
+      datasets: [{ label: 'Predicted', data: pVals, backgroundColor: PALETTE.map(c=>c+'99'), borderColor: PALETTE, borderWidth: 2 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#6B7A99', callback: v => '₹'+(v/1000).toFixed(0)+'K' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { ticks: { color: '#6B7A99', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' } }
+      }
+    }
+  });
+}
+
+// ── Recent Table ─────────────────────────────────────────────────────────────
+function renderRecentTable() {
+  const rows = DATA.recent.slice(0,8).map(t => `
+    <tr>
+      <td style="font-size:11px;color:#6B7A99">${t.date}</td>
+      <td style="font-size:13px">${t.description}</td>
+      <td><span class="badge ${t.type==='income'?'badge-income':'badge-exp'}">${t.type}</span></td>
+      <td style="font-family:var(--mono);font-size:13px;text-align:right;color:${t.type==='income'?'#4A9EFF':'#FF5C5C'}">${fmt(t.amount)}</td>
+    </tr>`).join('');
+  document.getElementById('recentTable').innerHTML = `<table><thead><tr><th>Date</th><th>Description</th><th>Type</th><th style="text-align:right">Amount</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderAllTx() {
+  const rows = DATA.allTx.map(t => `
+    <tr>
+      <td style="font-size:11px;color:#6B7A99">${t.date}</td>
+      <td style="font-size:13px">${t.description}</td>
+      <td style="font-size:12px;color:#6B7A99">${t.category}</td>
+      <td><span class="badge ${t.type==='income'?'badge-income':'badge-exp'}">${t.type}</span></td>
+      <td style="font-family:var(--mono);font-size:13px;text-align:right;color:${t.type==='income'?'#4A9EFF':'#FF5C5C'}">${fmt(t.amount)}</td>
+    </tr>`).join('');
+  document.getElementById('allTxTable').innerHTML = `<table><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th style="text-align:right">Amount</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+// ── Budget Bars ───────────────────────────────────────────────────────────────
+function renderBudgetBars() {
+  const html = DATA.budgets.map(b => {
+    const pct = Math.min(b['% Used'], 100);
+    const color = b.Status === 'OVER' ? '#FF5C5C' : (b.Status === 'WARN' ? '#FFD166' : '#00E5C3');
+    const badge = b.Status === 'OVER' ? 'badge-over' : (b.Status === 'WARN' ? 'badge-warn' : 'badge-ok');
+    return `<div class="budget-item">
+      <div class="budget-row">
+        <span class="budget-cat">${b.Category}</span>
+        <div style="display:flex;gap:10px;align-items:center">
+          <span class="budget-amounts">${fmt(b.Spent)} / ${fmt(b.Budget)}</span>
+          <span class="badge ${badge}">${b['% Used'].toFixed(0)}%</span>
+        </div>
+      </div>
+      <div class="progress-bg"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
+    </div>`;
+  }).join('');
+  document.getElementById('budgetBars').innerHTML = html;
+}
+
+// ── Goals ─────────────────────────────────────────────────────────────────────
+function renderGoals() {
+  const colors = ['#00E5C3','#9B7FFF','#FFD166'];
+  const html = DATA.goals.map((g,i) => {
+    const r = 52, circ = 2*Math.PI*r;
+    const dash = (g.pct/100)*circ;
+    return `<div class="goal-card">
+      <div class="goal-name">${g.name}</div>
+      <div class="goal-deadline">Target: ${g.deadline}</div>
+      <div class="goal-ring" style="position:relative;width:130px;height:130px;margin:0 auto 16px">
+        <svg class="ring-svg" width="130" height="130" viewBox="0 0 130 130">
+          <circle cx="65" cy="65" r="${r}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
+          <circle cx="65" cy="65" r="${r}" fill="none" stroke="${colors[i]}" stroke-width="10"
+            stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}" stroke-linecap="round"/>
+        </svg>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
+          <div style="font-size:22px;font-weight:700;font-family:var(--mono);color:${colors[i]}">${g.pct.toFixed(0)}%</div>
+        </div>
+      </div>
+      <div class="goal-amounts">
+        <span class="goal-saved" style="color:${colors[i]}">${fmt(g.current)} saved</span>
+        <span class="goal-target">/ ${fmt(g.target)}</span>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('goalsGrid').innerHTML = html;
+}
+
+// ── Anomalies ─────────────────────────────────────────────────────────────────
+function renderAnomalies() {
+  const html = DATA.anomalies.map(a => `
+    <div class="anomaly-card">
+      <div>
+        <div class="anomaly-desc">${a.description}</div>
+        <div class="anomaly-meta">${a.date} · ${a.category}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="anomaly-amount">${fmt(a.amount)}</div>
+        <div class="anomaly-z">Z-score: ${a.z_score.toFixed(2)}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('anomaliesList').innerHTML = html ||
+    `<div style="color:var(--muted);font-size:14px">No anomalies detected.</div>`;
+}
+
+// ── Subscriptions ─────────────────────────────────────────────────────────────
+function renderSubs() {
+  const total = DATA.subscriptions.reduce((s,x)=>s+x.amount,0);
+  const header = `<div style="margin-bottom:20px"><span style="font-size:14px;color:var(--muted)">Total monthly subscriptions: </span><span style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--yellow)">${fmt(total)}</span></div>`;
+  const cards = DATA.subscriptions.map(s => `
+    <div class="sub-card">
+      <div>
+        <div class="sub-name">${s.description}</div>
+        <div class="sub-cat">${s.category}</div>
+      </div>
+      <div class="sub-amount">${fmt(s.amount)}/mo</div>
+    </div>`).join('');
+  document.getElementById('subsList').innerHTML = header + cards;
+}
+
+// ── Add Transaction ───────────────────────────────────────────────────────────
+function addTransaction() {
+  const amt = document.getElementById('f-amount').value;
+  const desc = document.getElementById('f-desc').value;
+  if (!amt || !desc) { alert('Please fill in amount and description.'); return; }
+  // Simulate adding
+  const newTx = {
+    date: document.getElementById('f-date').value || new Date().toISOString().split('T')[0],
+    description: desc, category: document.getElementById('f-cat').value,
+    amount: parseFloat(amt), type: document.getElementById('f-type').value
+  };
+  DATA.allTx.unshift(newTx);
+  DATA.recent.unshift(newTx);
+  document.getElementById('f-amount').value = '';
+  document.getElementById('f-desc').value = '';
+  const msg = document.getElementById('successMsg');
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 3000);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+renderRecentTable();
+initCharts();
+</script>
+</body>
+</html>
